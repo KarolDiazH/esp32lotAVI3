@@ -5,7 +5,6 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 // 1. INICIO / DASHBOARD
-// Le ponemos el nombre 'granja.inicio' para que el Sidebar no de error
 Route::get('/', [ESP32DataController::class, 'index'])->name('granja.inicio');
 
 // 2. MONITOREO - ALIMENTACIÓN (Dentro de la carpeta monitoreo)
@@ -22,3 +21,6 @@ Route::get('/configuracion', function () {
 Route::get('/login', function () {
     return view('login');
 })->name('login');
+
+Route::post('/despachar-agua', [ESP32DataController::class, 'despacharAgua'])->name('agua.despachar');
+Route::post('/recargar-agua', [ESP32DataController::class, 'recargarAgua'])->name('agua.recargar');
