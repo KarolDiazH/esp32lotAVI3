@@ -24,3 +24,5 @@ Route::get('/login', function () {
 
 Route::post('/despachar-agua', [ESP32DataController::class, 'despacharAgua'])->name('agua.despachar');
 Route::post('/recargar-agua', [ESP32DataController::class, 'recargarAgua'])->name('agua.recargar');
+Route::post('/despachar-comida', [ESP32DataController::class, 'despacharComida'])->name('comida.despachar');
+Route::post('/recargar-comida', [ESP32DataController::class, 'recargarComida'])->name('comida.recargar');

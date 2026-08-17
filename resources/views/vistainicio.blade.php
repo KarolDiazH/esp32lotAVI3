@@ -16,29 +16,38 @@
         <!-- Fila de Tarjetas (Cards) -->
         <div class="row">
 
-            <!-- 1. ALIMENTACION -->
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-success shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                    ALIMENTACIÓN</div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ $ultimoAlimento->weight_raw ?? '0' }} <small class="text-muted text-uppercase">g</small>
-                                </div>
-                                <small class="text-success font-weight-bold mt-1 d-block">
-                                    <i class="fas fa-arrow-up"></i> +8.5% vs ayer
-                                </small>
-                            </div>
-                            <div class="col-auto">
-                                <i class="fas fa-leaf fa-2x text-success"></i>
-                            </div>
-                        </div>
+
+    <!-- 1. ALIMENTACIÓN -->
+<div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                        SILO DE ALIMENTO</div>
+                    <div class="h5 mb-2 font-weight-bold text-gray-800">
+                        <!-- Añadimos ID peso-comida para actualizarlo con JS -->
+                        <span id="peso-comida">{{ number_format($ultimoAlimento->peso_comida ?? 2000, 0) }}</span> 
+                        <small class="text-muted text-uppercase">g</small>
+                    </div>
+                    
+                    <!-- Botones de Acción para Comida -->
+                    <div class="btn-group btn-group-sm w-100" role="group">
+                        <button type="button" onclick="accionComida('despachar')" class="btn btn-success">
+                            <i class="fas fa-box-open"></i> Despachar
+                        </button>
+                        <button type="button" onclick="accionComida('recargar')" class="btn btn-outline-success">
+                            <i class="fas fa-fill-drip"></i> Llenar
+                        </button>
                     </div>
                 </div>
+                <div class="col-auto">
+                    <i class="fas fa-leaf fa-2x text-success"></i>
+                </div>
             </div>
-
+        </div>
+    </div>
+</div>
             <!-- 2. HIDRATACION -->
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-info shadow h-100 py-2">
@@ -155,35 +164,53 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    // Declaramos la función como GLOBAL usando window.
+    // --- FUNCIÓN PARA AGUA ---
     window.accionAgua = function(tipo) {
-        console.log("Clic detectado para: " + tipo);
-        
+        console.log("Clic detectado para Agua: " + tipo);
         let urlDestino = (tipo === 'despachar') ? "{{ route('agua.despachar') }}" : "{{ route('agua.recargar') }}";
 
         $.ajax({
             url: urlDestino,
             type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}' 
+            data: { _token: '{{ csrf_token() }}' },
+            success: function(response) {
+                if(response.success) {
+                    $('#litros-agua').text(response.nuevo_nivel.toFixed(2));
+                    alert("¡Éxito! Orden de AGUA enviada.");
+                }
             },
+            error: function(xhr) { alert("Error al conectar con el servidor."); }
+        });
+    }
+
+    // --- FUNCIÓN PARA COMIDA (NUEVA) ---
+    window.accionComida = function(tipo) {
+        console.log("Clic detectado para Comida: " + tipo);
+        
+        // Estas rutas deben estar en tu routes/web.php
+        let urlDestino = (tipo === 'despachar') ? "{{ route('comida.despachar') }}" : "{{ route('comida.recargar') }}";
+
+        $.ajax({
+            url: urlDestino,
+            type: 'POST',
+            data: { _token: '{{ csrf_token() }}' },
             success: function(response) {
                 console.log("Servidor respondió:", response);
                 if(response.success) {
-                    $('#litros-agua').text(response.nuevo_nivel.toFixed(2));
-                    alert("¡Éxito! Orden de " + tipo + " enviada al ESP32.");
+                    // Actualizamos el número de gramos en la tarjeta
+                    $('#peso-comida').text(response.nuevo_peso);
+                    alert("¡Éxito! Orden de COMIDA enviada al servo.");
                 }
             },
             error: function(xhr) {
-                console.error("Error detallado:", xhr.responseText);
-                alert("Error al conectar con el servidor.");
+                console.error("Error:", xhr.responseText);
+                alert("Error al procesar la comida.");
             }
         });
     }
 
-    // Actualización automática
+    // Actualización automática cada 10 segundos
     setInterval(function() {
-        // Solo recarga lo que está dentro de panel-actualizable
         $('#panel-actualizable').load(window.location.href + ' #panel-actualizable > *');
     }, 10000);
 </script>
