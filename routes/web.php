@@ -13,14 +13,8 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // AQUÍ ESTÁ LA RUTA QUE CONECTA THONNY (ESP32) CON LA FUNCIÓN STORE
-Route::post('/api/v1/sensor-update', [ESP32DataController::class, 'store'])->name('esp32.store');
 
-// Rutas de control del ESP32 (Afuera del middleware para que responda libremente)
-Route::post('/despachar-agua', [ESP32DataController::class, 'despacharAgua'])->name('agua.despachar');
-Route::post('/recargar-agua', [ESP32DataController::class, 'recargarAgua'])->name('agua.recargar');
-Route::post('/despachar-comida', [ESP32DataController::class, 'despacharComida'])->name('comida.despachar');
-Route::post('/recargar-comida', [ESP32DataController::class, 'recargarComida'])->name('comida.recargar');
-
+Route::post('/v1/sensor-update', [ESP32DataController::class, 'store']);
 
 // =========================================================================
 // 2. RUTAS PRIVADAS DEL SISTEMA (Solo personas logueadas en el navegador)
