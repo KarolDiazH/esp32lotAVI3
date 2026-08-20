@@ -2,27 +2,47 @@
 
 use App\Http\Controllers\ESP32DataController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-// 1. INICIO / DASHBOARD
-Route::get('/', [ESP32DataController::class, 'index'])->name('granja.inicio');
+// =========================================================================
+// 1. RUTAS PÚBLICAS Y COMUNICACIÓN CON EL HARDWARE (Sin bloqueo de Login)
+// =========================================================================
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// 2. MONITOREO - ALIMENTACIÓN (Dentro de la carpeta monitoreo)
-Route::get('/monitoreo/alimentacion', function () {
-    return view('monitoreo.alimentacion');
-})->name('monitoreo.alimentacion');
+// AQUÍ ESTÁ LA RUTA QUE CONECTA THONNY (ESP32) CON LA FUNCIÓN STORE
+Route::post('/api/v1/sensor-update', [ESP32DataController::class, 'store'])->name('esp32.store');
 
-// 3. CONFIGURACIÓN
-Route::get('/configuracion', function () {
-    return view('configuracion');
-})->name('granja.config'); // Ajusta este nombre si tu sidebar pide otro
-
-// 4. LOGIN
-Route::get('/login', function () {
-    return view('login');
-})->name('login');
-
+// Rutas de control del ESP32 (Afuera del middleware para que responda libremente)
 Route::post('/despachar-agua', [ESP32DataController::class, 'despacharAgua'])->name('agua.despachar');
 Route::post('/recargar-agua', [ESP32DataController::class, 'recargarAgua'])->name('agua.recargar');
 Route::post('/despachar-comida', [ESP32DataController::class, 'despacharComida'])->name('comida.despachar');
 Route::post('/recargar-comida', [ESP32DataController::class, 'recargarComida'])->name('comida.recargar');
+
+
+// =========================================================================
+// 2. RUTAS PRIVADAS DEL SISTEMA (Solo personas logueadas en el navegador)
+// =========================================================================
+Route::middleware(['auth'])->group(function () {
+
+    // Inicio / Dashboard Principal
+    Route::get('/', [ESP32DataController::class, 'index'])->name('granja.inicio');
+
+    // Monitoreo
+    Route::get('/monitoreo/alimentacion', function () {
+        return view('monitoreo.alimentacion');
+    })->name('monitoreo.alimentacion');
+
+    // Configuración
+    Route::get('/configuracion', function () {
+        return view('configuracion');
+    })->name('granja.config');
+
+    // Gestión de Usuarios (Solo Admin)
+    Route::get('/usuarios', [UserController::class, 'index'])->name('usuarios.index');
+    Route::get('/usuarios/nuevo', [UserController::class, 'create'])->name('usuarios.create');
+    Route::post('/usuarios/guardar', [UserController::class, 'store'])->name('usuarios.store');
+    Route::delete('/usuarios/eliminar/{id}', [UserController::class, 'destroy'])->name('usuarios.destroy');
+});
