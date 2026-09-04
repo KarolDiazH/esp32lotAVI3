@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoteAveController;
 use App\Http\Controllers\ReporteController;
+use App\Http\Controllers\SectorController;
 // =========================================================================
 // 1. RUTAS PÚBLICAS Y COMUNICACIÓN CON EL HARDWARE (Sin bloqueo de Login)
 // =========================================================================
@@ -50,4 +51,10 @@ Route::middleware(['auth'])->group(function () {
     // MÓDULO DE REPORTES
     Route::get('/reportes/diario', [ReporteController::class, 'diario'])->name('reportes.diario');
     Route::get('/reportes/historial', [ReporteController::class, 'historial'])->name('reportes.historial');
+
+    // SECTORES Y DISPOSITIVOS INDIVIDUALES
+    Route::get('/monitoreo/alimentacion', [SectorController::class, 'alimentacion'])->name('monitoreo.alimentacion');
+    Route::get('/monitoreo/hidratacion', [SectorController::class, 'hidratacion'])->name('monitoreo.hidratacion');
+    Route::get('/monitoreo/temperatura', [SectorController::class, 'temperatura'])->name('monitoreo.temperatura');
+    Route::get('/monitoreo/conteo-huevos', [SectorController::class, 'huevos'])->name('monitoreo.huevos');
 });
