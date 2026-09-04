@@ -124,9 +124,9 @@
                 <div id="collapseMonitoreo" class="collapse" aria-labelledby="headingMonitoreo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded shadow-sm">
                         <a class="collapse-item" href="{{ route('monitoreo.alimentacion') }}"><i class="fas fa-leaf text-success mr-2"></i>Alimentación</a>
-                        <a class="collapse-item" href="#"><i class="fas fa-tint text-info mr-2"></i>Hidratación</a>
-                        <a class="collapse-item" href="#"><i class="fas fa-thermometer-half text-warning mr-2"></i>Temperatura</a>
-                        <a class="collapse-item" href="#"><i class="fas fa-egg text-secondary mr-2"></i>Conteo Huevos</a>
+                        <a class="collapse-item" href="{{ route('monitoreo.hidratacion') }}"><i class="fas fa-tint text-info mr-2"></i>Hidratación</a>
+                        <a class="collapse-item" href="{{ route('monitoreo.temperatura') }}"><i class="fas fa-thermometer-half text-warning mr-2"></i>Temperatura</a>
+                        <a class="collapse-item" href="{{ route('monitoreo.huevos') }}"><i class="fas fa-egg text-secondary mr-2"></i>Conteo Huevos</a>
                     </div>
                 </div>
             </li>

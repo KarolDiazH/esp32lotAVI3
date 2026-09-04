@@ -47,25 +47,49 @@ class SectorController extends Controller
     {
         $ultimo = Hidratacion::latest()->first() ?? (object)['nivel_agua' => 3.00, 'created_at' => now()];
         $nivel = $ultimo->nivel_agua;
-        $porcentaje = min(100, max(0, round(($nivel / 5.0) * 100)));
+        $capacidadMax = 5.0; // 5 Litros
+        $porcentaje = min(100, max(0, round(($nivel / $capacidadMax) * 100)));
+
+        $poblacionAves = LoteAve::where('estado', '!=', 'Finalizado')->sum('cantidad_actual') ?: 100;
+
+        $hoy = Carbon::today();
+        $despachosHoy = Hidratacion::whereDate('created_at', $hoy)->where('device_id', 'WEB_ACTION')->count();
+        $consumoHoyLitros = $despachosHoy * 0.25;
 
         $historial = Hidratacion::orderBy('id', 'desc')->take(15)->get();
 
-        return view('monitoreo.hidratacion', compact('nivel', 'porcentaje', 'historial'));
+        return view('monitoreo.hidratacion', compact(
+            'nivel',
+            'porcentaje',
+            'capacidadMax',
+            'poblacionAves',
+            'consumoHoyLitros',
+            'despachosHoy',
+            'historial',
+            'ultimo'
+        ));
     }
 
     // 3. SECTOR TEMPERATURA Y HUMEDAD
     public function temperatura()
     {
         $ultimo = TemperaturaHumedad::latest()->first() ?? (object)['temperature' => 24.5, 'humidity' => 60, 'created_at' => now()];
-        $historial = TemperaturaHumedad::where('temperature', '>', 0)
-            ->orderBy('id', 'desc')
-            ->take(15)
-            ->get();
+        $clima = TemperaturaHumedad::where('temperature', '>', 0);
 
-        $promedioTemp = round(TemperaturaHumedad::where('temperature', '>', 0)->avg('temperature') ?? 24, 1);
+        $historial = (clone $clima)->orderBy('id', 'desc')->take(15)->get();
+        $promedioTemp = round((clone $clima)->avg('temperature') ?? 24, 1);
+        $tempMax = (clone $clima)->max('temperature') ?? 28;
+        $tempMin = (clone $clima)->min('temperature') ?? 18;
+        $humPromedio = round((clone $clima)->avg('humidity') ?? 60, 1);
 
-        return view('monitoreo.temperatura', compact('ultimo', 'historial', 'promedioTemp'));
+        return view('monitoreo.temperatura', compact(
+            'ultimo',
+            'historial',
+            'promedioTemp',
+            'tempMax',
+            'tempMin',
+            'humPromedio'
+        ));
     }
 
     // 4. SECTOR CONTEO DE HUEVOS (BANDA TRANSPORTADORA)
@@ -78,7 +102,16 @@ class SectorController extends Controller
         $historial = ConteoHuevo::orderBy('id', 'desc')->take(15)->get();
         $poblacionAves = LoteAve::where('estado', '!=', 'Finalizado')->sum('cantidad_actual') ?: 100;
         $eficiencia = min(100, round(($totalHoy / $poblacionAves) * 100, 1));
+        $ultimo = ConteoHuevo::latest()->first();
 
-        return view('monitoreo.huevos', compact('totalHoy', 'maples', 'sueltos', 'historial', 'eficiencia', 'poblacionAves'));
+        return view('monitoreo.huevos', compact(
+            'totalHoy',
+            'maples',
+            'sueltos',
+            'historial',
+            'eficiencia',
+            'poblacionAves',
+            'ultimo'
+        ));
     }
 }
