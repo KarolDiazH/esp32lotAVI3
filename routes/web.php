@@ -4,7 +4,8 @@ use App\Http\Controllers\ESP32DataController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\LoteAveController;
+use App\Http\Controllers\ReporteController;
 // =========================================================================
 // 1. RUTAS PÚBLICAS Y COMUNICACIÓN CON EL HARDWARE (Sin bloqueo de Login)
 // =========================================================================
@@ -35,4 +36,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/usuarios/nuevo', [UserController::class, 'create'])->name('usuarios.create');
     Route::post('/usuarios/guardar', [UserController::class, 'store'])->name('usuarios.store');
     Route::delete('/usuarios/eliminar/{id}', [UserController::class, 'destroy'])->name('usuarios.destroy');
+
+    
+
+    // CRUD DE AVES / LOTES
+    Route::get('/aves', [LoteAveController::class, 'index'])->name('aves.index');
+    Route::get('/aves/nuevo', [LoteAveController::class, 'create'])->name('aves.create');
+    Route::post('/aves/guardar', [LoteAveController::class, 'store'])->name('aves.store');
+    Route::get('/aves/{id}/editar', [LoteAveController::class, 'edit'])->name('aves.edit');
+    Route::put('/aves/{id}', [LoteAveController::class, 'update'])->name('aves.update');
+    Route::delete('/aves/eliminar/{id}', [LoteAveController::class, 'destroy'])->name('aves.destroy');
+
+    // MÓDULO DE REPORTES
+    Route::get('/reportes/diario', [ReporteController::class, 'diario'])->name('reportes.diario');
+    Route::get('/reportes/historial', [ReporteController::class, 'historial'])->name('reportes.historial');
 });

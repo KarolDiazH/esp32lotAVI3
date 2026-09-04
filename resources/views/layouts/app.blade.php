@@ -132,18 +132,26 @@
             </li>
 
             <!-- Reportes -->
+            <!-- Menú Reportes en el Sidebar -->
+<li class="nav-item">
+    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReportes"
+        aria-expanded="true" aria-controls="collapseReportes">
+        <i class="fas fa-chart-pie mr-2"></i>
+        <span>Reportes</span>
+    </a>
+    <div id="collapseReportes" class="collapse" aria-labelledby="headingReportes" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded shadow-sm">
+            <a class="collapse-item" href="{{ route('reportes.diario') }}"><i class="fas fa-calendar-day text-success mr-2"></i>Reporte Diario</a>
+            <a class="collapse-item" href="{{ route('reportes.historial') }}"><i class="fas fa-history text-info mr-2"></i>Historial</a>
+        </div>
+    </div>
+</li>
+            <!-- Opción Control de Aves en el Sidebar -->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReportes"
-                    aria-expanded="true" aria-controls="collapseReportes">
-                    <i class="fas fa-chart-pie mr-2"></i>
-                    <span>Reportes</span>
+                <a class="nav-link" href="{{ route('aves.index') }}">
+                    <i class="fas fa-kiwi-bird mr-2"></i>
+                    <span>Control de Aves</span>
                 </a>
-                <div id="collapseReportes" class="collapse" aria-labelledby="headingReportes" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded shadow-sm">
-                        <a class="collapse-item" href="#"><i class="fas fa-calendar-day text-success mr-2"></i>Reporte Diario</a>
-                        <a class="collapse-item" href="#"><i class="fas fa-history text-info mr-2"></i>Historial</a>
-                    </div>
-                </div>
             </li>
 
             <!-- SECCIÓN SOLO ADMIN (AQUÍ ESTÁ EL MENÚ DE USUARIOS ENLAZADO) -->
