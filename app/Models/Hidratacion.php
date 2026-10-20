@@ -11,6 +11,12 @@ class Hidratacion extends Model
 
     protected $fillable = ['device_id', 'dispositivo_id', 'nivel_agua', 'flotador_bajo', 'flotador_alto', 'bomba_encendida'];
 
+    protected $casts = [
+        'flotador_bajo'   => 'boolean',
+        'flotador_alto'   => 'boolean',
+        'bomba_encendida' => 'boolean',
+    ];
+
     public function dispositivo()
     {
         return $this->belongsTo(Dispositivo::class);
