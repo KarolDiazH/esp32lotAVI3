@@ -22,10 +22,7 @@ Route::middleware(['auth'])->group(function () {
     // Inicio / Dashboard Principal
     Route::get('/', [ESP32DataController::class, 'index'])->name('granja.inicio');
 
-    // Monitoreo
-    Route::get('/monitoreo/alimentacion', function () {
-        return view('monitoreo.alimentacion');
-    })->name('monitoreo.alimentacion');
+  
 
     // Configuración
     Route::get('/configuracion', function () {
