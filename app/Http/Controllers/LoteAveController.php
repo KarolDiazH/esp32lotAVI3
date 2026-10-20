@@ -73,7 +73,14 @@ class LoteAveController extends Controller
             'estado'          => ['required', 'in:En Crecimiento,En Postura,Finalizado'],
         ]);
 
-        $lote->update($request->all());
+        $lote->update($request->only([
+            'codigo_lote',
+            'raza',
+            'cantidad_actual',
+            'edad_semanas',
+            'estado',
+            'observaciones',
+        ]));
 
         return redirect()->route('aves.index')->with('success', '¡Datos del lote actualizados correctamente!');
     }
