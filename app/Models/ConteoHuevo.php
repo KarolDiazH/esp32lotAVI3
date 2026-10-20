@@ -8,6 +8,10 @@ class ConteoHuevo extends Model
 {
     protected $fillable = ['device_id', 'dispositivo_id', 'weight_raw', 'cantidad'];
 
+    protected $casts = [
+        'cantidad' => 'integer',
+    ];
+
     public function dispositivo()
     {
         return $this->belongsTo(Dispositivo::class);
