@@ -25,8 +25,8 @@ class ESP32DataController extends Controller
 
     public function store(Request $request)
     {
-        $tokenEsperado = env('ESP32_TOKEN', 'mi_token_secreto_123');
-        if ($request->bearerToken() !== $tokenEsperado) {
+        $tokenEsperado = config('services.esp32.token');
+        if (!$tokenEsperado || !hash_equals($tokenEsperado, (string) $request->bearerToken())) {
             return response()->json(['error' => 'No autorizado'], 401);
         }
 
