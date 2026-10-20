@@ -20,4 +20,8 @@ class LoteAve extends Model
         'estado',
         'observaciones',
     ];
+    public function dispositivos()
+    {
+        return $this->hasMany(Dispositivo::class, 'lote_aves_id');
+    }
 }

@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class ConteoHuevo extends Model
 {
-    // SIN ESTO, DA ERROR AL GUARDAR
-    protected $fillable = ['device_id', 'weight_raw', 'cantidad'];
+    protected $fillable = ['device_id', 'dispositivo_id', 'weight_raw', 'cantidad'];
+
+    public function dispositivo()
+    {
+        return $this->belongsTo(Dispositivo::class);
+    }
 }

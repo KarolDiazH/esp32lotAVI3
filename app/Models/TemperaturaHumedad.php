@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class TemperaturaHumedad extends Model
 {
-    // SIN ESTO, DA ERROR AL GUARDAR
-    protected $fillable = ['device_id', 'temperature', 'humidity'];
+    protected $fillable = ['device_id', 'dispositivo_id', 'temperature', 'humidity'];
+
+    public function dispositivo()
+    {
+        return $this->belongsTo(Dispositivo::class);
+    }
 }
