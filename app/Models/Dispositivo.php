@@ -34,4 +34,11 @@ class Dispositivo extends Model
     {
         return $this->hasMany(Hidratacion::class);
     }
+
+    // Un ESP32 se considera en línea si reportó en los últimos 2 minutos
+    public function getEnLineaAttribute(): bool
+    {
+        return $this->last_seen_at !== null
+            && $this->last_seen_at->gt(now()->subMinutes(2));
+    }
 }
