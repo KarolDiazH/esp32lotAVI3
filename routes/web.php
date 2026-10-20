@@ -40,6 +40,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/monitoreo/temperatura', [SectorController::class, 'temperatura'])->name('monitoreo.temperatura');
     Route::get('/monitoreo/conteo-huevos', [SectorController::class, 'huevos'])->name('monitoreo.huevos');
 
+    // ACCIONES MANUALES (requieren sesión)
+    Route::post('/acciones/agua/despachar', [ESP32DataController::class, 'despacharAgua'])->name('agua.despachar');
+    Route::post('/acciones/agua/recargar', [ESP32DataController::class, 'recargarAgua'])->name('agua.recargar');
+    Route::post('/acciones/comida/despachar', [ESP32DataController::class, 'despacharComida'])->name('comida.despachar');
+    Route::post('/acciones/comida/recargar', [ESP32DataController::class, 'recargarComida'])->name('comida.recargar');
+
     // =====================================================================
     // SOLO ADMIN
     // =====================================================================
